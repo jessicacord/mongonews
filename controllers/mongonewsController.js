@@ -89,23 +89,19 @@ router.get("/scrape", function(req, res) {
   });
 });
 
-
-// Route for grabbing a specific Article by id, populate it with it's note
-// app.get("/articles/:id", function(req, res) {
-//   // TODO
-//   // ====
-//   // Finish the route so it finds one article using the req.params.id,
-//   // and run the populate method with "note",
-//   // then responds with the article with the note included
-//   db.Article.findOne({_id: req.params.id})
-//   .populate("note")
-//   .then(function(dbArticle) {
-//     res.json(dbArticle);
-//   })
-//   .catch(function(err) {
-//     res.json(err);
-//   });
-// });
+//Route for Saved Articles Page
+router.get("/saved/", function(req, res) {
+  db.Article.find({saved: true})
+  .then(function(dbArticle) {
+    var hbsObject = {
+      articles: dbArticle
+    }
+    res.render("saved", hbsObject)
+  })
+  .catch(function(err) {
+    res.json(err);
+  })
+})
 
 // Route for updating Article as saved=true
 router.post("/save-article/:id", function(req, res) {
@@ -129,18 +125,46 @@ router.post("/unsave-article/:id", function(req, res) {
   })
 });
 
-//Route for Saved Articles Page
-router.get("/saved/", function(req, res) {
-  db.Article.find({saved: true})
-  .then(function(dbArticle) {
-    var hbsObject = {
-      articles: dbArticle
-    }
-    res.render("saved", hbsObject)
-  })
-  .catch(function(err) {
-    res.json(err);
-  })
-})
+//Route for displaying notes
+router.get("/notes/:id", function(req, res) {
+  db.Article.findOne({ _id: req.params.id })
+    .populate("notes")
+    .then(function(dbArticle) {
+      console.log(dbArticle);
+      res.json(dbArticle);
+    })
+    .catch(function(err) {
+      res.json(err);
+    });
+});
+
+// Route for saving/updating an Article's associated Note
+router.post("/articles/:id", function(req, res) {
+  db.Note.create(req.body)
+    .then(function(dbNote) {
+      console.log(dbNote);
+      return db.Article.findOneAndUpdate({_id: req.params.id}, { $push: { notes: dbNote._id } }, { new: true });
+    })
+    .then(function(dbArticle) {
+      res.json(dbArticle);
+    })
+    .catch(function(err) {
+      res.json(err);
+    });
+});
+
+//Route for deleting note
+router.delete("/notes/:id", function(req, res, next) {
+  db.Note.findById(req.params.id, function (err, note) {
+    if(err) { return next(err); }
+    if(!note) { return res.send(404); }
+    note.remove(function(err) {
+      if(err) { return handleError(res, err); }
+      return res.send(204);
+    });
+  });
+});
+
+
 
 module.exports = router;
