@@ -11,7 +11,14 @@ var cheerio = require("cheerio");
 var db = require("../models");
 // Connect to the Mongo DB
 var mongoose = require("mongoose");
-mongoose.connect("mongodb://localhost/mongonews");
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongonews";
+
+// Set mongoose to leverage built in JavaScript ES6 Promises
+// Connect to the Mongo DB
+mongoose.Promise = Promise;
+mongoose.connect(MONGODB_URI, {
+  useMongoClient: true
+});
 
 //Index
 router.get("/", function(req, res) {
