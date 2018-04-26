@@ -1,0 +1,28 @@
+.banner {
+    background: linear-gradient(to bottom, rgba(38, 42, 46, 0.6) 0%,rgba(38, 42, 46, 0.6) 100%), url("/assets/images/home-banner.jpg");
+    background-position: center center;
+    background-size: cover;
+    height: 33rem;
+    padding: 5rem 10rem;
+    margin-bottom: 4rem;
+  }
+  
+  .banner #banner-logo {
+    width: 65%;
+  }
+  
+  .banner h3 {
+    color: white;
+  }
+  
+  .banner p {
+    color: black;
+  }
+
+  .summary {
+    font-style: italic;
+  }
+
+  .article-image {
+    width: 100%;
+  }

@@ -1,0 +1,43 @@
+{{> navbar}}
+
+<div class="banner">
+    <div class="row">
+        <div class="col-sm-12 text-center">
+            <h3>The Atlantic Scraper</h3>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div id="articles">
+        {{#each articles}}
+        <div class="row">
+            <div class="col-md-3">
+                <img class="article-image" src="{{image}}">
+            </div>
+            <div class="col-md-7">
+                <h3>{{title}}</h3>
+                <p class="summary">{{summary}}</p>
+                <p>
+                    <span>{{dateDisplay}}</span>
+                    <a href="{{link}}" target="_blank">Read More -></a>
+                </p>
+            </div>
+
+            <div class="col-md-2">
+                {{#if saved}}
+                <button class="btn btn-primary save-article disabled" data-article-id="{{_id}}">Saved</button>
+                {{/if}}
+                {{#unless saved}}
+                <button class="btn btn-primary save-article" data-article-id="{{_id}}">Save</button>
+                {{/unless}}
+            </div>
+
+            <div class="col-md-12">
+                <hr>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+
+</div>
